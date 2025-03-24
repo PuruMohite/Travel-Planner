@@ -5,85 +5,88 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { googleLogout, useGoogleLogin } from "@react-oauth/google";
-import { useNavigate, useNavigation } from "react-router-dom";
+import { googleLogout } from "@react-oauth/google";
 import { FcGoogle } from "react-icons/fc";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import axios from "axios";
+import { db } from "@/service/firebaseConfig";
+
+const auth = getAuth();
+const provider = new GoogleAuthProvider();
+provider.setCustomParameters({ prompt: "select_account" });
 
 function Header() {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const [openDailog, setOpenDailog] = useState(false);
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+  const [openDialog, setOpenDialog] = useState(false);
 
-  // console.log(user);
-  useEffect(() => {
-    // console.log(user);
-  }, []);
+  // Handle Google Sign-In
+  const getUserProfile = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const googleUser = result.user;
 
-  const login = useGoogleLogin({
-    onSuccess: (codeResp) => getUserProfile(codeResp),
-    onError: (error) => console.log(error),
-  });
+      // Check Firestore if user exists
+      const userRef = doc(db, "users", googleUser.uid);
+      const userSnap = await getDoc(userRef);
 
-  const getUserProfile = (tokenInfo) => {
-    axios
-      .get(
-        `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${tokenInfo?.access_token}`,
-        {
-          headers: {
-            Authorization: `Bearer ${tokenInfo?.access_token}`,
-            Accept: "Application/json",
-          },
-        }
-      )
-      .then((resp) => {
-        // console.log(resp);
-        localStorage.setItem("user", JSON.stringify(resp.data));
-        setOpenDailog(false);
-        window.location.reload();
-      });
+      if (!userSnap.exists()) {
+        await setDoc(userRef, {
+          name: googleUser.displayName,
+          email: googleUser.email,
+          photoURL: googleUser.photoURL,
+          createdAt: new Date(),
+        });
+      }
+
+      // Store user info locally
+      const userData = { uid: googleUser.uid, ...googleUser };
+      localStorage.setItem("user", JSON.stringify(userData));
+      setUser(userData);
+      setOpenDialog(false);
+    } catch (error) {
+      console.error("Google Sign-In Error:", error);
+    }
+  };
+
+  // Logout Function
+  const handleLogout = () => {
+    googleLogout();
+    localStorage.removeItem("user");
+    setUser(null);
   };
 
   return (
     <div className="p-3 shadow-sm flex justify-between items-center px-5">
-      <img src="/logo.svg" alt="" />
+      <img src="/logo.svg" alt="Logo" />
       <div>
         {user ? (
           <div className="flex items-center gap-3">
             <a href="/create-trip">
-            <Button variant="outline" className="rounded-full cursor-pointer">
-              + Create Trip
-            </Button>
+              <Button variant="outline" className="rounded-full cursor-pointer">
+                + Create Trip
+              </Button>
             </a>
             <a href="/my-trips">
-            <Button variant="outline" className="rounded-full cursor-pointer">
-              My Trips
-            </Button>
+              <Button variant="outline" className="rounded-full cursor-pointer">
+                My Trips
+              </Button>
             </a>
             <Popover>
               <PopoverTrigger>
                 <img
-                  src={user?.picture}
+                  src={user?.photoURL}
                   className="h-[35px] w-[35px] rounded-full cursor-pointer"
-                  alt=""
+                  alt="User"
                 />
               </PopoverTrigger>
               <PopoverContent>
-                <h2
-                  className="cursor-pointer"
-                  onClick={() => {
-                    googleLogout();
-                    localStorage.clear();
-                    window.location.reload();
-                  }}
-                >
+                <h2 className="cursor-pointer" onClick={handleLogout}>
                   Logout
                 </h2>
               </PopoverContent>
@@ -91,23 +94,23 @@ function Header() {
           </div>
         ) : (
           <Button
-            onClick={() => setOpenDailog(true)}
+            onClick={() => setOpenDialog(true)}
             className="bg-black text-white hover:cursor-pointer"
           >
             Sign In
           </Button>
         )}
       </div>
-      <Dialog open={openDailog}>
-        <DialogContent>
+      <Dialog open={openDialog}>
+        <DialogContent setOpenDialog={setOpenDialog} openDialog={openDialog}>
           <DialogHeader>
             <DialogDescription>
-              <img src="/logo.svg" alt="" />
+              <img src="/logo.svg" alt="Logo" />
               <h2 className="font-bold text-lg mt-4">Sign In With Google</h2>
-              <p>Sign in to the App with Google authentication securely</p>
+              <p>Sign in securely with Google authentication</p>
               <Button
-                onClick={login}
-                className="w-full text-md mt-2 flex gap-2 items-center"
+                onClick={getUserProfile}
+                className="w-full text-md mt-2 flex gap-2 items-center cursor-pointer"
               >
                 <FcGoogle style={{ width: "1.5rem", height: "1.5rem" }} />
                 Sign In With Google

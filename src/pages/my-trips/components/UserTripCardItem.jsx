@@ -17,7 +17,7 @@ function UserTripCardItem({trip}) {
       const BASE_URL = `https://maps.gomaps.pro/maps/api/place/textsearch/json?query=${trip?.userSelection?.location?.description}&key=${API_KEY}`;
       const response = await axios.get(BASE_URL);
       const placeId = response.data.results[0]?.place_id;
-      console.log(response.data.results[0].photos[0].photo_reference);
+      // console.log(response.data.results[0].photos[0].photo_reference);
       const PhotoUrl = PHOTO_REF_URL.replace('{NAME}',response.data.results[0].photos[0].photo_reference);
       setPhotoUrl(PhotoUrl);
      
@@ -28,7 +28,8 @@ function UserTripCardItem({trip}) {
   return (
     <Link to={'/view-trip/'+trip?.id}>
     <div className='hover:scale-105 transition-all'>
-        <img src={photoUrl?photoUrl:"/placeholder.jpg"} alt="" className="h-[200px] w-[200px]object-cover rounded-xl"/>
+        {/* <img src={photoUrl?photoUrl:"/placeholder.jpg"} alt="" className="h-[200px] w-[200px]object-cover rounded-xl"/> */}
+        <img src={"/placeholder.jpg"} alt="" className="h-[200px] w-[200px]object-cover rounded-xl"/>
         <div>
             <h2 className='font-bold text-lg'>{trip?.userSelection?.location?.description}</h2>
             <h2 className='text-sm text-gray-500'>{trip?.userSelection?.noOfDays} Days trip with {trip?.userSelection?.budget} Budget</h2>

@@ -4,12 +4,12 @@ import "./index.css";
 import App from "./App.jsx";
 import { createBrowserRouter } from "react-router-dom";
 import { RouterProvider } from "react-router";
-import CreateTrip from "./create-trip";
+import CreateTrip from "./pages/create-trip";
 import Header from "./components/custom/Header";
 import { Toaster } from "@/components/ui/sonner";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import ViewTrip from "./view-trip/[tripId]";
-import MyTrips from "./my-trips";
+import ViewTrip from "./pages/view-trip/[tripId]";
+import MyTrips from "./pages/my-trips";
 
 export default function RootLayout({ children }) {
   return (

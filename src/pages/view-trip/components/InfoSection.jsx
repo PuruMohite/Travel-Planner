@@ -16,10 +16,10 @@ function InfoSection({ trip }) {
   const getPlaceDetails = async () => {
     try {
       const BASE_URL = `https://maps.gomaps.pro/maps/api/place/textsearch/json?query=${trip?.userSelection?.location?.description}&key=${API_KEY}`;
-      console.log(trip?.userSelection?.location?.description);
+      // console.log(trip?.userSelection?.location?.description);
       const response = await axios.get(BASE_URL);
       const placeId = response.data.results[0]?.place_id;
-      console.log(response.data.results[0].photos[0].photo_reference);
+      // console.log(response.data.results[0].photos[0].photo_reference);
       const PhotoUrl = PHOTO_REF_URL.replace('{NAME}',response.data.results[0].photos[0].photo_reference);
       setPhotoUrl(PhotoUrl);
      
@@ -32,8 +32,13 @@ function InfoSection({ trip }) {
   return (
     <div>
       {/* 🔹 Displays the fetched image dynamically */}
-      <img
+      {/* <img
         src={photoUrl ? photoUrl : "/placeholder.jpg"}
+        className="h-[310px] w-full object-cover rounded-xl"
+        alt="Place"
+      /> */}
+      <img
+        src={"/placeholder.jpg"}
         className="h-[310px] w-full object-cover rounded-xl"
         alt="Place"
       />

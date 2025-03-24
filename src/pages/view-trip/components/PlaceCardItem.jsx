@@ -21,7 +21,7 @@ function PlaceCardItem({ place }) {
       const BASE_URL = `https://maps.gomaps.pro/maps/api/place/textsearch/json?query=${place?.placeName}&key=${API_KEY}`;
       const response = await axios.get(BASE_URL);
       const placeId = response.data.results[0]?.place_id;
-      console.log(response.data.results[0].photos[0].photo_reference);
+      // console.log(response.data.results[0].photos[0].photo_reference);
       const PhotoUrl = PHOTO_REF_URL.replace(
         "{NAME}",
         response.data.results[0].photos[0].photo_reference
@@ -38,8 +38,13 @@ function PlaceCardItem({ place }) {
       target="_blank"
     >
       <div className="border rounded-xl p-3 mt-2 flex gap-5 hover:scale-105 transition-all hover:shadow-md cursor-pointer">
-        <img
+        {/* <img
           src={photoUrl ? photoUrl : "/placeholder.jpg"}
+          className="w-[130px] h-[130px] rounded-xl object-cover"
+          alt=""
+        /> */}
+        <img
+          src={"/placeholder.jpg"}
           className="w-[130px] h-[130px] rounded-xl object-cover"
           alt=""
         />
