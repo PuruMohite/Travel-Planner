@@ -10,6 +10,10 @@ import { Toaster } from "@/components/ui/sonner";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import ViewTrip from "./pages/view-trip/[tripId]";
 import MyTrips from "./pages/my-trips";
+import MyProfile from "./pages/my-profile/[userId]";
+import { UserProvider } from "./context/UserContext.jsx";
+
+
 
 export default function RootLayout({ children }) {
   return (
@@ -40,14 +44,21 @@ const router = createBrowserRouter([
     path: "/my-trips",
     element: <MyTrips />,
   },
+  {
+    path: "/my-profile/:userId",
+    element: <MyProfile />
+  }
+  
 ]);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_AUTH_CLIENT_ID}>
+      <UserProvider>
       <Header />
       <Toaster />
       <RouterProvider router={router} />
+      </UserProvider>
     </GoogleOAuthProvider>
   </StrictMode>
 );

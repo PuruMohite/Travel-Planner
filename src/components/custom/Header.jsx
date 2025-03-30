@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import {
   Popover,
@@ -16,13 +16,15 @@ import {
   DialogHeader,
 } from "@/components/ui/dialog";
 import { db } from "@/service/firebaseConfig";
+import { useLocation, useNavigate } from "react-router-dom";
+import { UserContext } from "@/context/UserContext";
 
 const auth = getAuth();
 const provider = new GoogleAuthProvider();
 provider.setCustomParameters({ prompt: "select_account" });
 
 function Header() {
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+  const { localUser: user, setLocalUser } = useContext(UserContext); 
   const [openDialog, setOpenDialog] = useState(false);
 
   // Handle Google Sign-In
@@ -41,13 +43,14 @@ function Header() {
           email: googleUser.email,
           photoURL: googleUser.photoURL,
           createdAt: new Date(),
+          id: googleUser.uid,
         });
       }
 
       // Store user info locally
       const userData = { uid: googleUser.uid, ...googleUser };
       localStorage.setItem("user", JSON.stringify(userData));
-      setUser(userData);
+      setLocalUser(userData);
       setOpenDialog(false);
     } catch (error) {
       console.error("Google Sign-In Error:", error);
@@ -58,7 +61,7 @@ function Header() {
   const handleLogout = () => {
     googleLogout();
     localStorage.removeItem("user");
-    setUser(null);
+    setLocalUser(null);
   };
 
   return (
