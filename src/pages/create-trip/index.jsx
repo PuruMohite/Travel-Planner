@@ -116,17 +116,17 @@ function CreateTrip() {
       });
   };
   return (
-    <div className="sm:px-10 md:px-32 lg:px-56 xl:px-72 px-5 mt-10">
-      <h2 className="font-bold text-3xl">
+    <div className="mt-5 sm:px-10 md:px-32 lg:px-56 xl:px-72 px-5 md:mt-7">
+      <h2 className="font-bold text-2xl md:text-3xl">
         Tell us your travel preferences 🏕️🌴
       </h2>
-      <p className="mt-3 text-gray-500 text-xl">
+      <p className="mt-3 text-gray-500 text-lg md:text-xl">
         Just provide some basic information, and our trip planner will generate
         a customized itinerary based on your preferences.
       </p>
-      <div className="mt-10 flex flex-col gap-2">
+      <div className="mt-3 md:mt-10 flex flex-col gap-2">
         <div>
-          <h2 className="text-xl my-3 font-bold">
+          <h2 className="text-lg md:text-xl my-3 font-bold">
             What is destination of choice?
           </h2>
           <GoMapsAutocomplete
@@ -137,7 +137,7 @@ function CreateTrip() {
           />
         </div>
         <div>
-          <h2 className="text-xl my-3 font-bold">
+          <h2 className="text-lg md:text-xl my-3 font-bold">
             How many days are you planning your trip?
           </h2>
           <Input
@@ -148,18 +148,18 @@ function CreateTrip() {
         </div>
       </div>
       <div>
-        <h2 className="text-xl my-3 font-medium">What is your Budget?</h2>
-        <div className="grid grid-cols-3 gap-5 mt-5">
+        <h2 className="text-lg md:text-xl my-5 font-medium">What is your Budget?</h2>
+        <div className="grid grid-cols-3 gap-5">
           {selectBudgetOptions.map((item, index) => (
             <div
               key={index}
               onClick={() => handleInputChange("budget", item.title)}
-              className={`p-4 border cursor-pointer rounded-lg hover:shadow-lg ${
+              className={`flex flex-col items-center p-2 md:p-4 border cursor-pointer rounded-lg hover:shadow-lg ${
                 formData.budget == item.title && "shadow-lg border-black"
               }`}
             >
               <h2 className="text-3xl">{item.icon}</h2>
-              <h2 className="font-bold text-lg">{item.title}</h2>
+              <h2 className="font-bold text-base md:text-lg">{item.title}</h2>
               <h2 className="text-sm text-gray-500">{item.desc}</h2>
             </div>
           ))}
@@ -167,20 +167,20 @@ function CreateTrip() {
       </div>
 
       <div>
-        <h2 className="text-xl my-3 font-medium">
+        <h2 className="text-lg md:text-xl my-3 font-medium">
           Who do you plan on traveling with on your next adventure?
         </h2>
-        <div className="grid grid-cols-3 gap-5 mt-5">
+        <div className="grid grid-cols-3 gap-5 mt-5 my-5">
           {SelectTravelersList.map((item, index) => (
             <div
               key={index}
               onClick={() => handleInputChange("traveler", item.people)}
-              className={`p-4 border cursor-pointer rounded-lg hover:shadow-lg ${
+              className={`flex flex-col items-center p-2 md:p-4 border cursor-pointer rounded-lg hover:shadow-lg ${
                 formData?.traveler == item.people && "shadow-lg border-black"
               }`}
             >
               <h2 className="text-3xl">{item.icon}</h2>
-              <h2 className="font-bold text-lg">{item.title}</h2>
+              <h2 className="font-bold text-base md:text-lg">{item.title}</h2>
               <h2 className="text-sm text-gray-500">{item.desc}</h2>
             </div>
           ))}

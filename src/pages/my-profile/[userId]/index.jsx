@@ -32,6 +32,7 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/service/firebaseConfig";
 import { useLocation, useNavigate } from "react-router-dom";
 import { UserContext } from "@/context/UserContext";
+import { toast } from "sonner";
 
 function MyProfile() {
   const [user, setUser] = useState(() => {
@@ -59,17 +60,17 @@ function MyProfile() {
 
   // Keep `user` state in sync with `localUser`
   // Sync `user`, `profileImage`, and `coverImage` when `localUser` changes
-useEffect(() => {
-  if (localUser) {
-    setUser(localUser);
-    setProfileImage(localUser.profileImage || "/profilePlaceholder1.png");
-    setCoverImage(localUser.coverImage || "/placeholder.jpg");
-  } else {
-    setUser(null);
-    setProfileImage("/profilePlaceholder1.png");
-    setCoverImage("/placeholder.jpg");
-  }
-}, [localUser]);
+  useEffect(() => {
+    if (localUser) {
+      setUser(localUser);
+      setProfileImage(localUser.profileImage || "/profilePlaceholder1.png");
+      setCoverImage(localUser.coverImage || "/placeholder.jpg");
+    } else {
+      setUser(null);
+      setProfileImage("/profilePlaceholder1.png");
+      setCoverImage("/placeholder.jpg");
+    }
+  }, [localUser]);
 
   // Function to update Firestore user profile
   const updateUserProfile = async (userId, formData) => {
@@ -102,16 +103,16 @@ useEffect(() => {
       [name]: value,
     }));
   };
-
+  // console.log(localUser);
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!localUser?.uid) {
-      console.error("Error: localUser.uid is missing!");
+    if (!localUser?.uid && !localUser?.id) {
+      console.error("Error: localUser.uid and localUser.id is missing!");
       return;
     }
 
-    await updateUserProfile(localUser.uid, formData);
+    await updateUserProfile(localUser.uid || localUser.id, formData);
   };
 
   // Function to fetch user data from Firestore
@@ -189,29 +190,27 @@ useEffect(() => {
   };
 
   const updateFirestoreImage = async (type, imageUrl) => {
-  
     const userId = user?.uid || localUser?.uid || user?.id || localUser?.id;
     if (!userId) {
       console.error("Error: userId is undefined!");
       return;
     }
-  
+
     try {
       // console.log(`Updating Firestore: ${type} -> ${imageUrl}`); // Debugging log
       const userRef = doc(db, "users", userId);
       await updateDoc(userRef, { [type]: imageUrl });
-  
+
       // Update state & localStorage
       const updatedUser = { ...user, [type]: imageUrl };
       setUser(updatedUser);
       localStorage.setItem("user", JSON.stringify(updatedUser));
-  
+
       // console.log("Firestore updated successfully!");
     } catch (error) {
       console.error("Error updating Firestore:", error);
     }
   };
-  
 
   const handleFileChange = async (e, type) => {
     const file = e.target.files[0];
@@ -235,67 +234,89 @@ useEffect(() => {
           <img
             src={user?.coverImage || "/placeholder.jpg"}
             alt="Cover"
-            className="w-full object-cover h-[250px]"
+            className="w-full object-cover  h-[300px] md:h-[250px]"
           />
         </label>
         <input
           id="coverUpload"
           type="file"
           accept="image/*"
+          onClick={() =>
+            toast.success("Please select new Cover Image", { position: "top-center" })
+          }
           onChange={(e) => handleFileChange(e, "coverImage")}
           className="hidden"
         />
       </div>
-      <div className="flex flex-row w-full">
-        <div className="flex flex-col items-center mx-20 w-1/3">
+      <div className="flex md:flex-row w-full p-4 gap-2 md:p-0">
+        <div className="flex flex-col items-center md:mx-20 md:w-1/3">
           <label htmlFor="imageUpload" className="cursor-pointer">
             <img
               src={user?.profileImage || "/profilePlaceholder1.png"}
               alt=""
-              className="object-cover rounded-full h-[200px] w-[200px] relative top-[-50px]"
+              className="object-cover rounded-full h-[135px] w-[135px] md:h-[200px] md:w-[200px] relative md:top-[-50px]"
             />
           </label>
           <input
             id="imageUpload"
             type="file"
             accept="image/*"
+            onClick={() =>
+              toast.success("Please select new Profile Image", { position: "top-center" })
+            }
             onChange={(e) => handleFileChange(e, "profileImage")}
             className="hidden"
           />
-          <h1 className="text-4xl font-bold mt-[-35px]">{user?.name}</h1>
-          <p className="text-xl font-bold">{user?.email}</p>
-          <p className="my-4">
-            <span>0</span> following <span>0</span> followers
+          <h1 className="md:text-4xl font-bold md:mt-[-35px] md:text-md text-lg">
+            {user?.name}
+          </h1>
+          <p className="md:text-xl font-bold  text-xs md:text-md text-slate-500">
+            {user?.email}
           </p>
+          <div className="my-4 flex gap-4">
+            <div className="flex flex-col items-center gap-0 text-slate-500 md:gap-1 md:flex-row md:items-stretch">
+              <span className="font-bold text-black">0</span> following
+            </div>
+            <div className="flex flex-col items-center gap-0 text-slate-500 md:gap-1 md:flex-row md:items-stretch">
+              <span className="font-bold text-black">0</span> followers
+            </div>
+          </div>
         </div>
-        <div className="p-9 flex flex-col gap-3">
-          <h1 className="text-2xl font-bold w-[80%]">
+        <div className="md:p-9 flex flex-col md:gap-3 items-center md:items-stretch">
+          <h1 className="md:text-2xl font-bold md:w-[80%] text-sm p-3 md:p-1">
             {user?.about ||
               `About the user Lorem ipsum dolor sit amet, consectetur adipisicing
             elit. Excepturi hic corrupti amet explicabo suscipit architecto ipsa
             culpa ducimus neque, unde quaerat esse soluta?`}
           </h1>
-          <div className="flex flex-col gap-5">
-            <div className="flex flex-row gap-10">
+          <div className="flex flex-col gap-0 md:gap-5">
+            <div className="flex gap-1 flex-col text-xs p-1 text-black md:flex-row md:gap-10 md:text-base">
               <p>
-                <i className="ri-calendar-line"></i> Joined {joinedAtDate}
+                <span className="text-black">
+                  <i className="ri-calendar-line"></i> Joined{" "}
+                </span>
+                {joinedAtDate}
               </p>
               <p>
-                <i className="ri-calendar-event-fill"></i>
-                {`D.O.B ${user?.dateOfBirth || "Not Provided"}`}
+                <span className="text-black">
+                  <i className="ri-calendar-event-fill"></i>D.O.B{" "}
+                </span>
+                {`${user?.dateOfBirth || "Not Provided"}`}
               </p>
             </div>
-            <div className="flex flex-row gap-3">
+            <div className="flex flex-row gap-3 my-3 md:gap-3 md:my-0">
               {/* edit */}
               <Dialog open={openDailog}>
                 <DialogTrigger asChild>
                   <Button
-                    variant="outline"
+                    variant="default"
+                    className="cursor-pointer text-sm p-3 rounded-full md:text-base md:p-4 md:rounded-md"
                     onClick={() => {
                       setOpenDailog(true);
                     }}
                   >
-                    Edit Profile
+                    <i className="ri-pencil-line text-xl"></i>
+                    Edit
                   </Button>
                 </DialogTrigger>
                 <DialogContent
@@ -310,8 +331,8 @@ useEffect(() => {
                       done.
                     </DialogDescription>
                   </DialogHeader>
-                  <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
+                  <div className="grid md:gap-4 md:py-4">
+                    <div className="grid grid-cols-4 items-center md:gap-4">
                       <Label htmlFor="username" className="text-right">
                         Username
                       </Label>
@@ -324,14 +345,16 @@ useEffect(() => {
                         }
                       />
                     </div>
-                    <div className="flex flex-row items-start gap-6">
+                    <div className="flex flex-row items-start md:gap-6">
                       <Label htmlFor="message" className="mt-2">
                         About
                       </Label>
                       <Textarea
+                        defaultValue={user?.about}
                         className="w-full"
                         placeholder="I am from . . ."
                         id="message"
+                        maxLength={90}
                         onChange={(e) =>
                           handleInputChange("about", e.target.value)
                         }
@@ -379,7 +402,12 @@ useEffect(() => {
               {/* share */}
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button variant="outline">Share</Button>
+                  <Button
+                    variant="default"
+                    className="cursor-pointer text-sm p-3 rounded-full md:text-base md:p-4 md:rounded-md"
+                  >
+                    <i className="ri-share-line text-lg"></i>Share
+                  </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-md">
                   <DialogHeader>
@@ -421,9 +449,10 @@ useEffect(() => {
               <AlertDialogTrigger asChild>
                 <Button
                   variant="outline"
-                  className="text-white bg-red-600 cursor-pointer hover:text-white hover:bg-red-500"
+                  className="text-white bg-red-600 cursor-pointer hover:text-white hover:bg-red-500 px-6.5 rounded-full md:rounded-md md:px-4"
                 >
-                  Delete Account
+                  <i className="ri-delete-bin-6-line text-lg"></i> Delete
+                  Account
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>

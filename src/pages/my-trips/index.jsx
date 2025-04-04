@@ -32,10 +32,10 @@ function MyTrips() {
   };
 
   return (
-    <div className="sm:px-10 md:px-32 lg:px-56 xl:px-72 px-5 mt-6">
-      <h2 className="font-bold text-3xl">My Trips</h2>
+    <div className=" md:px-32 lg:px-56 xl:px-72 pl-8 mt-5 md:pl-0 md:mt-7">
+      <h2 className="font-bold text-2xl md:text-3xl">My Trips</h2>
 
-      <div className="grid grid-cols-2 mt-4 md:grid-cols-3 gap-5">
+      <div className="grid grid-cols-2 mt-4 space-y-4 md:grid-cols-3 md:space-y-6">
         {userTrips?.length > 0
           ? userTrips.map((trip, index) => (
               <UserTripCardItem trip={trip} key={index} />
@@ -43,7 +43,7 @@ function MyTrips() {
           : [1, 2, 3, 4, 5, 6].map((item, index) => (
               <div
                 key={index}
-                className="h-[200px] w-full bg-slate-700 animate-pulse rounded-xl"
+                className="w-[150px] h-[150px] md:h-[200px] md:w-[200px] bg-slate-700 animate-pulse rounded-xl"
               ></div>
             ))}
       </div>
