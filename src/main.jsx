@@ -12,18 +12,52 @@ import MyProfile from "./pages/my-profile/[userId]";
 import { UserProvider } from "./context/UserContext.jsx";
 import Community from "./pages/community/[userId]";
 import Hero from "./components/custom/Hero";
+import ProtectedRoute from "./components/custom/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
-      {path: "/", element: <Hero />},
-      { path: "create-trip", element: <CreateTrip /> },
-      { path: "view-trip/:tripId", element: <ViewTrip /> },
-      { path: "my-trips", element: <MyTrips /> },
-      { path: "my-profile/:userId", element: <MyProfile /> },
-      { path: "community/:userId", element: <Community /> },
+      { path: "/", element: <Hero /> },
+      {
+        path: "create-trip",
+        element: (
+            <CreateTrip />
+        ),
+      },
+      {
+        path: "view-trip/:tripId",
+        element: (
+          <ProtectedRoute>
+            <ViewTrip />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "my-trips",
+        element: (
+          <ProtectedRoute>
+            <MyTrips />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "my-profile/:userId",
+        element: (
+          <ProtectedRoute>
+            <MyProfile />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "community/:userId",
+        element: (
+          <ProtectedRoute>
+            <Community />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
 ]);

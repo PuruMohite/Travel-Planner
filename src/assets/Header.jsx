@@ -18,6 +18,8 @@ import {
 import { db } from "@/service/firebaseConfig";
 import { useLocation, useNavigate } from "react-router-dom";
 import { UserContext } from "@/context/UserContext";
+import { DialogClose, DialogTitle } from "@radix-ui/react-dialog";
+import { X } from "lucide-react";
 
 const auth = getAuth();
 const provider = new GoogleAuthProvider();
@@ -130,7 +132,7 @@ function Header() {
           <div className="flex items-center gap-3">
             <Button
               variant="default"
-              className={`w-9 h-9 md:w-auto md:h-auto rounded-full cursor-pointer ${
+              className={`w-9 h-9 md:w-auto md:h-10 rounded-full cursor-pointer ${
                 location.pathname.includes("community")
                   ? "bg-[#27f09b] text-black hover:bg-[#27f09b]"
                   : ""
@@ -139,12 +141,13 @@ function Header() {
                 pageNavigate("community");
               }}
             >
-              <i className="ri-group-fill text-lg"></i><span className="hidden md:block">Community</span> 
+              <i className="ri-group-fill text-xl"></i>
+              <span className="hidden md:block">Community</span>
             </Button>
 
             <Button
               variant="default"
-              className={`w-9 h-9 md:w-auto md:h-auto rounded-full cursor-pointer ${
+              className={`w-9 h-9 md:w-auto md:h-10 rounded-full cursor-pointer ${
                 location.pathname.includes("create-trip")
                   ? "bg-[#27f09b] text-black hover:bg-[#27f09b]"
                   : ""
@@ -153,12 +156,13 @@ function Header() {
                 pageNavigate("create-trip");
               }}
             >
-              <i className="ri-add-circle-line text-2xl"></i><span className="hidden md:block">Create Trip</span>
+              <i className="ri-add-circle-line text-2xl"></i>
+              <span className="hidden md:block">Create Trip</span>
             </Button>
 
             <Button
               variant="default"
-              className={`w-9 h-9 md:w-auto md:h-auto rounded-full cursor-pointer ${
+              className={`w-9 h-9 md:w-auto md:h-10 rounded-full cursor-pointer ${
                 location.pathname.includes("my-trips")
                   ? "bg-[#27f09b] text-black hover:bg-[#27f09b]"
                   : ""
@@ -167,7 +171,8 @@ function Header() {
                 pageNavigate("my-trips");
               }}
             >
-              <i className="ri-landscape-line text-2xl"></i><span className="hidden md:block">My Trips</span>
+              <i className="ri-landscape-line text-2xl"></i>
+              <span className="hidden md:block">My Trips</span>
             </Button>
             <Popover open={openPopover} onOpenChange={setOpenPopover}>
               <PopoverTrigger>
@@ -193,8 +198,10 @@ function Header() {
                 <div className="hover:bg-gray-100 p-2 rounded-md">
                   <h2
                     className="cursor-pointer font-bold"
-                    onClick={() => {handleLogout();
-                      setOpenPopover(false);}}
+                    onClick={() => {
+                      handleLogout();
+                      setOpenPopover(false);
+                    }}
                   >
                     <i className="ri-logout-box-r-line text-red-500"></i> Logout
                   </h2>
@@ -211,9 +218,9 @@ function Header() {
           </Button>
         )}
       </div>
-      <Dialog open={openDialog}>
-        <DialogContent setOpenDialog={setOpenDialog} openDialog={openDialog}>
-          <DialogHeader>
+      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+        <DialogContent openDialog={openDialog} setOpenDialog={setOpenDialog}>
+          <DialogHeader> 
             <DialogDescription>
               <img src="/logo.svg" alt="Logo" />
               <h2 className="font-bold text-lg mt-4">Sign In With Google</h2>

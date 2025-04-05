@@ -1,12 +1,13 @@
 import GoMapsAutocomplete from "@/components/custom/GoMapsAutocomplete";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
 import {
   AI_PROMPT,
   SelectTravelersList,
   selectBudgetOptions,
 } from "@/constants/options";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import { chatSession } from "@/service/AIModel";
@@ -25,11 +26,13 @@ import { doc, setDoc } from "firebase/firestore";
 import { db } from "@/service/firebaseConfig";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "@/context/UserContext";
 
 function CreateTrip() {
   const [place, setPlace] = useState();
   const [formData, setFormData] = useState([]);
   const [openDailog, setOpenDailog] = useState(false);
+  const { localUser, setLocalUser } = useContext(UserContext);
 
   const [loading, setLoading] = useState(false);
 
@@ -53,6 +56,8 @@ function CreateTrip() {
   const onGenerateTrip = async () => {
     const user = localStorage.getItem("user");
     if (!user) {
+      //save the formData temporarily before showing the sign-in
+      localStorage.setItem("pendingTripFormData", JSON.stringify(formData));
       setOpenDailog(true);
       return;
     }
@@ -97,9 +102,33 @@ function CreateTrip() {
     navigate("/view-trip/" + docId);
   };
 
-  const getUserProfile = (tokenInfo) => {
-    axios
-      .get(
+  const getUserByEmail = async (googleUser , email) => {
+    const q = query(collection(db, "users"), where("email", "==", email));
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      // Assuming email is unique, return the first matching document
+      const docSnap = querySnapshot.docs[0];
+      return { id: docSnap.id, ...docSnap.data() };
+    } else {
+      //User doesn't exist - create new one
+      const newDocRef = doc(collection(db, "users"));
+      const newUser = {
+          id: newDocRef.id,
+          name: googleUser.name,
+          email: googleUser.email,
+          photoURL: googleUser.picture,
+          createdAt: new Date(),
+          profileImage: "/profilePlaceholder1.png",
+      };
+      await setDoc(newDocRef, newUser);
+      return newUser;
+    }
+  };
+
+  const getUserProfile = async (tokenInfo) => {
+    try {
+      const resp = await axios.get(
         `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${tokenInfo?.access_token}`,
         {
           headers: {
@@ -107,13 +136,24 @@ function CreateTrip() {
             Accept: "Application/json",
           },
         }
-      )
-      .then((resp) => {
-        // console.log(resp);
-        localStorage.setItem("user", JSON.stringify(resp.data));
-        setOpenDailog(false);
-        onGenerateTrip();
-      });
+      );
+      console.log(resp.data);
+      const user = await getUserByEmail(resp.data, resp.data.email); // ✅ await it
+      localStorage.setItem("user", JSON.stringify(user));
+      setLocalUser(user);
+      setOpenDailog(false);
+  
+      const storedFormData = localStorage.getItem("pendingTripFormData");
+      if (storedFormData) {
+        setFormData(JSON.parse(storedFormData));
+        localStorage.removeItem("pendingTripFormData");
+  
+        // Slight delay to let state update before generating trip
+        setTimeout(() => onGenerateTrip(), 100);
+      }
+    } catch (err) {
+      console.error("Error fetching profile:", err);
+    }
   };
   return (
     <div className="mt-5 sm:px-10 md:px-32 lg:px-56 xl:px-72 px-5 md:mt-7">
@@ -148,7 +188,9 @@ function CreateTrip() {
         </div>
       </div>
       <div>
-        <h2 className="text-lg md:text-xl my-5 font-medium">What is your Budget?</h2>
+        <h2 className="text-lg md:text-xl my-5 font-medium">
+          What is your Budget?
+        </h2>
         <div className="grid grid-cols-3 gap-5">
           {selectBudgetOptions.map((item, index) => (
             <div

@@ -46,7 +46,7 @@ function MyProfile() {
   const [formData, setFormData] = useState({});
   const [openDailog, setOpenDailog] = useState(false);
 
-  const { localUser } = useContext(UserContext);
+  const { localUser, setLocalUser } = useContext(UserContext);
 
   //states for images
   const [profileImage, setProfileImage] = useState(
@@ -87,6 +87,7 @@ function MyProfile() {
       const updatedUser = await getUserById(userId);
       if (updatedUser) {
         setUser(updatedUser);
+        setLocalUser(updatedUser);
         localStorage.setItem("user", JSON.stringify(updatedUser));
       }
 
@@ -137,6 +138,7 @@ function MyProfile() {
       const userData = await getUserById(localUser.uid);
       if (userData) {
         setUser(userData);
+        setLocalUser(userData);
         localStorage.setItem("user", JSON.stringify(userData));
         getJoinedAtDate(userData);
       }
@@ -204,6 +206,7 @@ function MyProfile() {
       // Update state & localStorage
       const updatedUser = { ...user, [type]: imageUrl };
       setUser(updatedUser);
+      setLocalUser(updatedUser);
       localStorage.setItem("user", JSON.stringify(updatedUser));
 
       // console.log("Firestore updated successfully!");
