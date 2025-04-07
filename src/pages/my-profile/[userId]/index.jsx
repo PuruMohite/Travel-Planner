@@ -235,7 +235,7 @@ function MyProfile() {
       <div>
         <label htmlFor="coverUpload" className="cursor-pointer block">
           <img
-            src={user?.coverImage || "/placeholder.jpg"}
+            src={user?.coverImage || "/bgPlaceholder3.jpg"}
             alt="Cover"
             className="w-full object-cover  h-[300px] md:h-[250px]"
           />

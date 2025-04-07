@@ -321,7 +321,7 @@ function Community() {
         );
         return (
           <Card key={post.id}>
-            <CardContent className="p-4 space-y-3">
+            <CardContent className="space-y-3  md:p-4">
               <div className="flex items-center space-x-3">
                 <img
                   src={post?.profileImage || "/profilePlaceholder1.png"}

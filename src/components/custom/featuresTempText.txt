@@ -1,0 +1,18 @@
+1. 🧠 Smart Trip Generator
+Tell us your vibe — Zentra crafts a custom itinerary based on your destination, duration, budget, and interests.
+
+2. 🗺️ Personalized Itinerary
+Daily schedules with handpicked places, perfect timing, and real-time Google Maps images.
+
+3. 🏨 Hotel Recommendations
+Stay smart — we suggest top stays with images, pricing, and location, tailored to your trip.
+
+4. 📁 Saved Trips Dashboard
+All your adventures in one place — access past and upcoming trips anytime.
+
+5. 🌍 Community Sharing
+Post photos and stories from your trips — explore how others travel, get inspired.
+
+6. 🔐 Google Sign-In
+One-click login. Safe, fast, and secure access to your travel plans.
+

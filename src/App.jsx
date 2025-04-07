@@ -6,14 +6,16 @@ import { Button } from "./components/ui/button";
 import Hero from "./components/custom/Hero";
 import Header from "./assets/Header";
 import { Outlet } from "react-router-dom";
+import Layout from "./assets/Layout";
+
 function App() {
   const [count, setCount] = useState(0);
 
   return (
     <>
-      <Header />
-      {/* Hero */}
+      <Layout>
       <Outlet />
+      </Layout>
     </>
   );
 }

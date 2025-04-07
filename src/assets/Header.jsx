@@ -120,13 +120,15 @@ function Header() {
       navigate("/my-trips");
     } else if (pageName === "my-profile") {
       navigate("/my-profile/" + user?.id);
+    }else if(pageName === "home"){
+      navigate("/");
     }
   };
   // console.log(user);
 
   return (
-    <div className="p-3 shadow-sm flex flex-row justify-between items-center px-2">
-      <img src="/logo.svg" alt="Logo" />
+    <div className="h-15 md:h-20 shadow-sm flex flex-row justify-between items-center px-3 fixed top-0 left-0 w-full z-50 bg-white  md:px-12">
+      <img src="/logoImage.png" className="cursor-pointer h-14 w-auto object-contain" alt="Logo"  onClick={() => {pageNavigate("home")}}/>
       <div>
         {user ? (
           <div className="flex items-center gap-3">
@@ -220,7 +222,7 @@ function Header() {
       </div>
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent openDialog={openDialog} setOpenDialog={setOpenDialog}>
-          <DialogHeader> 
+          <DialogHeader>
             <DialogDescription>
               <img src="/logo.svg" alt="Logo" />
               <h2 className="font-bold text-lg mt-4">Sign In With Google</h2>
