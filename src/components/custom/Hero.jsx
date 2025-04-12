@@ -45,9 +45,9 @@ function Hero() {
   return (
     <div className="flex flex-col items-center mx-5 gap-6 my-14 md:mx-56 md:gap-9 md:my-8">
       <h1 className="flex flex-col items-center font-extrabold text-4xl md:text-[2.5rem] text-center mt-16">
-        <span className="flex items-center text-[#27f09b] text-[3rem] font-bold ">
+        <span className="flex items-center text-[#26ef9a] text-[3rem] font-bold ">
           <img
-            src="/logoImage.png"
+            src="/logoImage3.svg"
             className="h-20 inline m-0 p-0 mr-[-0.4rem]"
             alt=""
           />{" "}

@@ -231,13 +231,13 @@ function MyProfile() {
   };
 
   return (
-    <div>
+    <div className="">
       <div>
         <label htmlFor="coverUpload" className="cursor-pointer block">
           <img
             src={user?.coverImage || "/bgPlaceholder3.jpg"}
             alt="Cover"
-            className="w-full object-cover  h-[300px] md:h-[250px]"
+            className="w-full object-cover  h-[320px] md:h-[250px]"
           />
         </label>
         <input

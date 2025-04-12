@@ -128,7 +128,7 @@ function Header() {
 
   return (
     <div className="h-15 md:h-20 shadow-sm flex flex-row justify-between items-center px-3 fixed top-0 left-0 w-full z-50 bg-white  md:px-12">
-      <img src="/logoImage.png" className="cursor-pointer h-14 w-auto object-contain" alt="Logo"  onClick={() => {pageNavigate("home")}}/>
+      <img src="/logoImage3.svg" className="cursor-pointer h-14 w-auto object-contain" alt="Logo"  onClick={() => {pageNavigate("home")}}/>
       <div>
         {user ? (
           <div className="flex items-center gap-3">

@@ -273,7 +273,7 @@ function Community() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-2 md:p-4 space-y-4">
+    <div className="max-w-2xl mx-auto p-2 md:p-4 space-y-4 mt-2">
       {/* Create Post Section */}
       <Card className="p-1 md:p-4">
         <CardContent className="px-2 md:px-0">
