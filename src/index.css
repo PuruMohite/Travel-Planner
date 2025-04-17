@@ -171,3 +171,8 @@
   background: #27f09b;
   z-index: 9999;/*this ensures the cursor moves in all the pages and not one*/
 }
+@media (max-width: 768px) {
+  #cursor {
+    display: none;
+  }
+}

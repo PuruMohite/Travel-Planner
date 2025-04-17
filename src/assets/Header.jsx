@@ -23,6 +23,8 @@ import { X } from "lucide-react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useRef } from "react";
+import VisuallyHidden from "@/components/ui/visually-hidden"; // custom component
+
 
 const auth = getAuth();
 const provider = new GoogleAuthProvider();
@@ -356,6 +358,9 @@ function Header() {
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent openDialog={openDialog} setOpenDialog={setOpenDialog}>
           <DialogHeader>
+          <DialogTitle>
+        <VisuallyHidden>Google Sign In</VisuallyHidden>
+      </DialogTitle>
             <DialogDescription className="flex flex-col items-center justify-center">
               <img src="/logoImage3.svg" alt="Logo" className="w-[5rem] h-[5rem]"/>
               <h2 className="font-bold text-lg mt-4">Sign In With Google</h2>
