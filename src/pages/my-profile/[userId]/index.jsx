@@ -30,9 +30,11 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/service/firebaseConfig";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate, useNavigation } from "react-router-dom";
 import { UserContext } from "@/context/UserContext";
 import { toast } from "sonner";
+import { DeleteAccountAndData } from "@/components/custom/DeleteAccountAndData";
+
 
 function MyProfile() {
   const [user, setUser] = useState(() => {
@@ -60,6 +62,7 @@ function MyProfile() {
 
   // Keep `user` state in sync with `localUser`
   // Sync `user`, `profileImage`, and `coverImage` when `localUser` changes
+  const navigate = useNavigate();
   useEffect(() => {
     if (localUser) {
       setUser(localUser);
@@ -458,14 +461,22 @@ function MyProfile() {
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>We are still working on this functionality</AlertDialogTitle>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Be patient and sorry for the inconvenience.
+                  This action cannot be undone. This will permanently delete your account and remove your data from our servers and redirect you to home page.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction>Continue</AlertDialogAction>
+                  <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
+                  <AlertDialogAction className="cursor-pointer" onClick={async() => {
+                    await DeleteAccountAndData();
+                    toast.success("Account Deleted Successfully!", {
+                            position: "top-center",
+                    });
+
+                    window.location.href = "/";
+
+                  }}>Continue</AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>

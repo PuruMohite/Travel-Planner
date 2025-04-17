@@ -214,7 +214,7 @@ function Header() {
         navbarButtonAnimation();
       }, 500);
 
-      console.log(userData);
+      // console.log(userData);
     } catch (error) {
       console.error("Google Sign-In Error:", error);
     }

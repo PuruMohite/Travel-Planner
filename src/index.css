@@ -163,3 +163,11 @@
   font-weight: 600;
 }
 
+#cursor{
+  position: fixed;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #27f09b;
+  z-index: 9999;/*this ensures the cursor moves in all the pages and not one*/
+}

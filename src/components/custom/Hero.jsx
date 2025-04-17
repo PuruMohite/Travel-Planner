@@ -8,14 +8,13 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 function Hero() {
-  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
   
 
   const features = [
     {
       heading: "Smart Trip Generator",
       about:
-        "Tell us your vibe — Zentra crafts a custom itinerary based on your destination, duration, and budget.",
+        "Tell us your vibe — and get a custom itinerary based on your destination, duration, and budget.",
       logo: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -364,7 +363,7 @@ function Hero() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       const cards = gsap.utils.toArray(".card-wrapper");
-      console.log("Number of cards:", cards.length);
+      // console.log("Number of cards:", cards.length);
 
       cards.forEach((card) => {
         const tl = gsap.timeline({
