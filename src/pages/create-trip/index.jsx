@@ -197,7 +197,7 @@ function CreateTrip() {
               key={index}
               onClick={() => handleInputChange("budget", item.title)}
               className={`flex flex-col items-center p-2 md:p-4 border cursor-pointer rounded-lg hover:shadow-lg ${
-                formData.budget == item.title && "shadow-lg border-black"
+                formData.budget == item.title && "shadow-lg border-emerald-500"
               }`}
             >
               <h2 className="text-3xl">{item.icon}</h2>
@@ -218,7 +218,7 @@ function CreateTrip() {
               key={index}
               onClick={() => handleInputChange("traveler", item.people)}
               className={`flex flex-col items-center p-2 md:p-4 border cursor-pointer rounded-lg hover:shadow-lg ${
-                formData?.traveler == item.people && "shadow-lg border-black"
+                formData?.traveler == item.people && "shadow-lg border-emerald-500"
               }`}
             >
               <h2 className="text-3xl">{item.icon}</h2>
@@ -232,7 +232,7 @@ function CreateTrip() {
         <Button
           disabled={loading}
           onClick={onGenerateTrip}
-          className="cursor-pointer"
+          className="bg-transparent text-[#27f09b] border-2 border-[#27f09b] hover:bg-[#27f09b] hover:text-black transition-colors duration-300 ease-in-out cursor-pointer"
         >
           {loading ? (
             <AiOutlineLoading3Quarters className="h-7 w-7 animate-spin" />

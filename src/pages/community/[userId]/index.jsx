@@ -289,7 +289,7 @@ function Community() {
               onChange={(e) => handleInputChange(e.target.value, "postText")}
               className="flex-grow h-10 resize-none"
             />
-            <Button
+            <Button className="cursor-pointer transition-colors duration-300 ease-in-out"
               variant="outline"
               onClick={() => document.getElementById("imageUpload").click()}
             >
@@ -302,7 +302,7 @@ function Community() {
               onChange={(e) => handleInputChange(e, "postImage")}
               className="hidden"
             />
-            <Button
+            <Button className="cursor-pointer transition-colors duration-300 ease-in-out"
               onClick={() => {
                 handleSubmit(postData);
               }}
@@ -349,7 +349,7 @@ function Community() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="cursor-pointer"
+                    className="cursor-pointer transition-colors duration-300 ease-in-out"
                     onClick={() => handleLike(post.id, post.likes)}
                   >
                     <Heart
@@ -361,7 +361,7 @@ function Community() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="cursor-pointer"
+                    className="cursor-pointer transition-colors duration-300 ease-in-out"
                     onClick={() => handleCommentToggle(post.id)}
                   >
                     <MessageCircle
@@ -373,7 +373,7 @@ function Community() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="cursor-pointer"
+                    className="cursor-pointer transition-colors duration-300 ease-in-out"
                   >
                     <Share2 className="w-5 h-5" />
                   </Button>
@@ -407,7 +407,7 @@ function Community() {
                               {getJoinedAtDate(comment?.createdAt)}
                             </span>
                           </div>
-                          <span className="text-gray-600">{comment.text}</span>
+                          <span className="text-sm">{comment.text}</span>
                         </div>
                       ))
                     ) : (
@@ -428,7 +428,7 @@ function Community() {
                     />
                     <Button
                       onClick={() => handleAddComment(post.id)}
-                      className="bg-blue-500 text-white p-2 rounded-lg text-sm"
+                      className=" cursor-pointer bg-blue-700 text-white hover:bg-blue-600 p-2 rounded-lg text-sm transition-colors duration-300 ease-in-out"
                     >
                       Post
                     </Button>

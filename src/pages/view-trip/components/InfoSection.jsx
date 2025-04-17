@@ -32,16 +32,16 @@ function InfoSection({ trip }) {
   return (
     <div>
       {/* 🔹 Displays the fetched image dynamically */}
-      {/* <img
-        src={photoUrl ? photoUrl : "/placeholder.jpg"}
-        className="h-[310px] w-full object-cover rounded-xl"
-        alt="Place"
-      /> */}
       <img
-        src={"/placeholder.jpg"}
+        src={photoUrl ? photoUrl : "/logoImage.png"}
         className="h-[310px] w-full object-cover rounded-xl"
         alt="Place"
       />
+      {/* <img
+        src={"/placeholder.jpg"}
+        className="h-[310px] w-full object-cover rounded-xl"
+        alt="Place"
+      /> */}
 
       <div className="flex justify-between items-center">
         <div className="my-5 flex flex-col gap-2">

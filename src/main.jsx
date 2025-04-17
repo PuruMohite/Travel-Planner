@@ -13,6 +13,7 @@ import { UserProvider } from "./context/UserContext.jsx";
 import Community from "./pages/community/[userId]";
 import Hero from "./components/custom/Hero";
 import ProtectedRoute from "./components/custom/ProtectedRoute";
+import ScrollToTop from "./components/custom/ScrollToTop";
 
 const router = createBrowserRouter([
   {
@@ -23,13 +24,18 @@ const router = createBrowserRouter([
       {
         path: "create-trip",
         element: (
+            <>
+            <ScrollToTop />
             <CreateTrip />
+            </>
+            
         ),
       },
       {
         path: "view-trip/:tripId",
         element: (
           <ProtectedRoute>
+            <ScrollToTop />
             <ViewTrip />
           </ProtectedRoute>
         ),
@@ -38,6 +44,7 @@ const router = createBrowserRouter([
         path: "my-trips",
         element: (
           <ProtectedRoute>
+            <ScrollToTop />
             <MyTrips />
           </ProtectedRoute>
         ),
@@ -46,6 +53,7 @@ const router = createBrowserRouter([
         path: "my-profile/:userId",
         element: (
           <ProtectedRoute>
+            <ScrollToTop />
             <MyProfile />
           </ProtectedRoute>
         ),

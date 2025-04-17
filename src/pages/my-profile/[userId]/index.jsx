@@ -278,30 +278,28 @@ function MyProfile() {
           </p>
           <div className="my-4 flex gap-4">
             <div className="flex flex-col items-center gap-0 text-slate-500 md:gap-1 md:flex-row md:items-stretch">
-              <span className="font-bold text-black">0</span> following
+              <span className="font-bold text-white">0</span> following
             </div>
             <div className="flex flex-col items-center gap-0 text-slate-500 md:gap-1 md:flex-row md:items-stretch">
-              <span className="font-bold text-black">0</span> followers
+              <span className="font-bold text-white">0</span> followers
             </div>
           </div>
         </div>
-        <div className="md:p-9 flex flex-col md:gap-3 items-center md:items-stretch">
+        <div className="md:p-9 flex flex-col md:gap-3 items-center md:items-stretch w-full">
           <h1 className="md:text-2xl font-bold md:w-[80%] text-sm p-3 md:p-1">
             {user?.about ||
-              `About the user Lorem ipsum dolor sit amet, consectetur adipisicing
-            elit. Excepturi hic corrupti amet explicabo suscipit architecto ipsa
-            culpa ducimus neque, unde quaerat esse soluta?`}
+              `New here? Just edit your profile!`}
           </h1>
           <div className="flex flex-col gap-0 md:gap-5">
-            <div className="flex gap-1 flex-col text-xs p-1 text-black md:flex-row md:gap-10 md:text-base">
+            <div className="flex gap-1 flex-col text-xs p-1 text-white md:flex-row md:gap-10 md:text-base">
               <p>
-                <span className="text-black">
+                <span className="text-slate-500">
                   <i className="ri-calendar-line"></i> Joined{" "}
                 </span>
-                {joinedAtDate}
+                {user?.createdAt && new Date(user.createdAt.seconds ? user.createdAt.seconds * 1000 : user.createdAt).toLocaleDateString()}
               </p>
               <p>
-                <span className="text-black">
+                <span className="text-slate-500">
                   <i className="ri-calendar-event-fill"></i>D.O.B{" "}
                 </span>
                 {`${user?.dateOfBirth || "Not Provided"}`}
@@ -313,7 +311,7 @@ function MyProfile() {
                 <DialogTrigger asChild>
                   <Button
                     variant="default"
-                    className="cursor-pointer text-sm p-3 rounded-full md:text-base md:p-4 md:rounded-md"
+                    className="cursor-pointer text-sm p-3 rounded-full md:text-base md:p-4 md:rounded-md transition-colors duration-300 ease-in-out hover:cursor-pointer"
                     onClick={() => {
                       setOpenDailog(true);
                     }}
@@ -407,7 +405,7 @@ function MyProfile() {
                 <DialogTrigger asChild>
                   <Button
                     variant="default"
-                    className="cursor-pointer text-sm p-3 rounded-full md:text-base md:p-4 md:rounded-md"
+                    className="text-sm p-3 rounded-full md:text-base md:p-4 md:rounded-md transition-colors duration-300 ease-in-out hover:cursor-pointer"
                   >
                     <i className="ri-share-line text-lg"></i>Share
                   </Button>
@@ -446,13 +444,13 @@ function MyProfile() {
               </Dialog>
             </div>
           </div>
-          <div className="text-end">
+          <div className="md:text-end md:mt-auto">
             {/* delete */}
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button
                   variant="outline"
-                  className="text-white bg-red-600 cursor-pointer hover:text-white hover:bg-red-500 px-6.5 rounded-full md:rounded-md md:px-4"
+                  className="text-white border-none bg-red-600 cursor-pointer hover:text-white hover:bg-red-500 px-6.5 rounded-full md:rounded-md md:px-4 transition-colors duration-300 ease-in-out hover:cursor-pointer"
                 >
                   <i className="ri-delete-bin-6-line text-lg"></i> Delete
                   Account
@@ -460,10 +458,9 @@ function MyProfile() {
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogTitle>We are still working on this functionality</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This action cannot be undone. This will permanently delete
-                    your account and remove your data from our servers.
+                    Be patient and sorry for the inconvenience.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>

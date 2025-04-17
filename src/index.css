@@ -121,5 +121,45 @@
   body {
     @apply bg-background text-foreground;
   }
+  html, body{
+    overflow-x: hidden;
+  }
+}
+.z-path {
+  stroke: none !important;
+  fill: #27f09b !important;
+}
+.z-nav-logo {
+  stroke: #27f09b !important;
+  fill: #27f09b !important;
+}
+::-webkit-scrollbar {
+  width: 2px; /* or height: 8px; for horizontal scroll */
+}
+
+/* Scrollbar Thumb (the draggable part) */
+::-webkit-scrollbar-thumb {
+  background: #27f09b; /* your emerald green */
+  border-radius: 0px;
+}
+
+/* Scrollbar Track background */
+::-webkit-scrollbar-track {
+  background: #0f0f0f; /* dark background or whatever fits */
+}
+
+.letter{
+  font-family: "Orbitron", sans-serif;
+    font-optical-sizing: auto;
+}
+
+.large-text-1{
+  font-family: "Rajdhani", sans-serif;
+  font-weight: 500;
+}
+
+.feature-heading{
+  font-family: "Rajdhani", sans-serif;
+  font-weight: 600;
 }
 

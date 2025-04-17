@@ -12,7 +12,7 @@ const GoMapsAutocomplete = ({ onSelect }) => {
     if (value.length > 2) {
       try {
         const response = await axios.get(
-          `https://maps.gomaps.pro/maps/api/place/queryautocomplete/json?input=${value}&key=${import.meta.env.VITE_GOMAPS_API_KEY}`
+          `https://maps.gomaps.pro/maps/api/place/queryautocomplete/json?input=${value}&key=${import.meta.env.VITE_GO_MAPS_API_KEY}`
         );
 
         // console.log("API Response:", response.data); // Debugging
@@ -35,11 +35,11 @@ const GoMapsAutocomplete = ({ onSelect }) => {
         placeholder="Search for a location..."
       />
       {suggestions.length > 0 && (
-        <ul className="absolute w-full bg-white border rounded mt-1 shadow-md">
+        <ul className="absolute w-full bg-black border rounded mt-1 shadow-md">
           {suggestions.map((place) => (
             <li
               key={place.place_id || place.id}
-              className="p-2 cursor-pointer hover:bg-gray-200"
+              className="p-2 cursor-pointer hover:bg-gray-900"
               onClick={() => {
                 setQuery(place.description);
                 setSuggestions([]);

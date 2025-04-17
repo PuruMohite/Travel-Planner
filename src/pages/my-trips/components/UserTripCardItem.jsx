@@ -20,6 +20,7 @@ function UserTripCardItem({trip}) {
       // console.log(response.data.results[0].photos[0].photo_reference);
       const PhotoUrl = PHOTO_REF_URL.replace('{NAME}',response.data.results[0].photos[0].photo_reference);
       setPhotoUrl(PhotoUrl);
+      console.log(PhotoUrl);
      
     } catch (error) {
       console.error("Error fetching place details:", error);
@@ -28,8 +29,8 @@ function UserTripCardItem({trip}) {
   return (
     <Link to={'/view-trip/'+trip?.id}>
     <div className='hover:scale-105 transition-all'>
-        {/* <img src={photoUrl?photoUrl:"/logoImage.png"} alt="" className="h-[200px] w-[200px]object-cover rounded-xl"/> */}
-        <img src={"/logoImage.png"} alt="" className="h-[150px] w-[150px] md:h-[200px] md:w-[200px] object-cover rounded-xl"/>
+        <img src={photoUrl?photoUrl:"/logoImage.png"} alt="" className="h-[150px] w-[150px] md:h-[200px] md:w-[200px] object-cover rounded-xl"/>
+        {/* <img src={"/logoImage.png"} alt="" className="h-[150px] w-[150px] md:h-[200px] md:w-[200px] object-cover rounded-xl"/> */}
         <div>
             <h2 className='font-bold text-lg'>{trip?.userSelection?.location?.description}</h2>
             <h2 className='text-sm text-gray-500'>{trip?.userSelection?.noOfDays} Days trip with {trip?.userSelection?.budget} Budget</h2>

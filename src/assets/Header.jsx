@@ -20,6 +20,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { UserContext } from "@/context/UserContext";
 import { DialogClose, DialogTitle } from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { useRef } from "react";
 
 const auth = getAuth();
 const provider = new GoogleAuthProvider();
@@ -35,12 +38,105 @@ function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const [openPopover, setOpenPopover] = useState(false);
+  const hasAnimatedOnce = useRef(false);
+  const navbarRef = useRef(null);
+  const logoRef = useRef(null);
+  const buttonRefs = useRef([]);
+  buttonRefs.current = [];
+  const profilePicRef = useRef(null);
+  const signInRef = useRef(null);
+
+  //GSAP animations
+
+  useGSAP(() => {
+    // NavbarAnimation(); // 👈 This triggers the navbar animation
+
+    window.addEventListener("wheel", function (dets) {
+      if (dets.deltaY > 0) {
+        gsap.to(".logo", {
+          rotate: -360,
+          duration: 0.5,
+          ease: "none",
+        });
+      } else {
+        gsap.to(".logo", {
+          rotate: 0,
+          duration: 0.5,
+          ease: "none",
+        });
+      }
+    });
+  }, []); // 👈 no deps here, only once
+  function NavbarAnimation() {
+    const tl = gsap.timeline();
+
+    tl.from(navbarRef.current, {
+      y: -50,
+      opacity: 0,
+      duration: 0.3,
+      delay: 0.5,
+    });
+
+    tl.fromTo(
+      logoRef.current,
+      { rotate: -180, x: -50, opacity: 0 },
+      { rotate: 0, x: 0, opacity: 1, duration: 0.3 }
+    );
+
+    tl.set(buttonRefs.current, { opacity: 0 });
+
+    const blinkSpeeds = [0.3, 0.2, 0.1];
+    blinkSpeeds.forEach((dur) => {
+      tl.to(buttonRefs.current, { opacity: 1, duration: dur });
+      tl.to(buttonRefs.current, { opacity: 0, duration: dur });
+    });
+
+    tl.to(buttonRefs.current, { opacity: 1, duration: 0.2 });
+
+    if (profilePicRef.current) {
+      tl.fromTo(
+        profilePicRef.current,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.3 }
+      );
+    }
+    if (signInRef.current) {
+      tl.fromTo(
+        signInRef.current,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.3 }
+      );
+    }
+  }
+
+  function navbarButtonAnimation() {
+    // Blink 3 times with increasing speed
+    // Ensure buttons are hidden initially
+    const tl = gsap.timeline();
+    tl.set(buttonRefs.current, { opacity: 0 });
+
+    const blinkSpeeds = [0.3, 0.2, 0.1];
+    blinkSpeeds.forEach((dur) => {
+      tl.to(buttonRefs.current, { opacity: 1, duration: dur });
+      tl.to(buttonRefs.current, { opacity: 0, duration: dur });
+    });
+
+    tl.to(buttonRefs.current, { opacity: 1, duration: 0.2 });
+  }
+
 
   useEffect(() => {
     // Load cached user from localStorage on mount
     const cachedUser = JSON.parse(localStorage.getItem("user"));
     if (cachedUser?.profileImage) {
+      setLocalUser(cachedUser);
       setProfilePic(cachedUser.profileImage);
+
+      if (!hasAnimatedOnce.current) {
+        // Ensuring the animation only runs once
+        NavbarAnimation();
+        hasAnimatedOnce.current = true;
+      }
     }
 
     const fetchUser = async () => {
@@ -61,6 +157,15 @@ function Header() {
     fetchUser();
   }, [user?.id, user?.uid]);
 
+  useEffect(() => {
+    if (user && !hasAnimatedOnce.current) {
+      setTimeout(() => {
+        NavbarAnimation();
+        hasAnimatedOnce.current = true;
+      }, 100); // tiny delay for DOM to reflect new user UI
+    }
+  }, [user]);
+
   // Update only when the user state changes
   useEffect(() => {
     if (user?.profileImage) {
@@ -78,24 +183,38 @@ function Header() {
       // Check Firestore if user exists
       const userRef = doc(db, "users", googleUser.uid);
       const userSnap = await getDoc(userRef);
-
+      let userData = {};
       if (!userSnap.exists()) {
-        await setDoc(userRef, {
+        userData = {
           name: googleUser.displayName,
           email: googleUser.email,
           photoURL: googleUser.photoURL,
           createdAt: new Date(),
           id: googleUser.uid,
           profileImage: "/profilePlaceholder1.png",
-        });
+        };
+        await setDoc(userRef, userData); // ✅ only once
+      } else {
+        userData = userSnap.data();
       }
 
       // Store user info locally
-      const userData = { uid: googleUser.uid, ...googleUser };
       localStorage.setItem("user", JSON.stringify(userData));
       setLocalUser(userData);
       setProfilePic(userData.profileImage);
       setOpenDialog(false);
+      // NavbarAnimation();
+      // window.scrollTo({ top: 0, behavior: "smooth" });
+      // ✅ Soft reload to update UI immediately
+      if (!hasAnimatedOnce.current) {
+        NavbarAnimation();
+        hasAnimatedOnce.current = true;
+      }
+      setTimeout(() => {
+        navbarButtonAnimation();
+      }, 500);
+
+      console.log(userData);
     } catch (error) {
       console.error("Google Sign-In Error:", error);
     }
@@ -120,21 +239,31 @@ function Header() {
       navigate("/my-trips");
     } else if (pageName === "my-profile") {
       navigate("/my-profile/" + user?.id);
-    }else if(pageName === "home"){
+    } else if (pageName === "home") {
       navigate("/");
     }
   };
+
   // console.log(user);
 
   return (
-    <div className="h-15 md:h-20 shadow-sm flex flex-row justify-between items-center px-3 fixed top-0 left-0 w-full z-50 bg-white  md:px-12">
-      <img src="/logoImage3.svg" className="cursor-pointer h-14 w-auto object-contain" alt="Logo"  onClick={() => {pageNavigate("home")}}/>
+    <div className="navbar bg-black h-15 md:h-20 shadow-sm flex flex-row justify-between items-center px-3 fixed top-0 left-0 w-full z-50 md:px-12">
+      <img
+        ref={logoRef}
+        src="/logoImage3.svg"
+        className=".z-nav-logo logo cursor-pointer h-14 w-auto object-contain"
+        alt="Logo"
+        onClick={() => {
+          pageNavigate("home");
+        }}
+      />
       <div>
         {user ? (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 ">
             <Button
+              ref={(el) => el && buttonRefs.current.push(el)}
               variant="default"
-              className={`w-9 h-9 md:w-auto md:h-10 rounded-full cursor-pointer ${
+              className={`navbar-button opacity-0 community w-9 h-9 md:w-auto md:h-10 rounded-full cursor-pointer bg-transparent border-2 border-[#27f09b] text-[#27f09b] hover:bg-[#27f09b] hover:text-black transition-colors duration-300 ease-in-out ${
                 location.pathname.includes("community")
                   ? "bg-[#27f09b] text-black hover:bg-[#27f09b]"
                   : ""
@@ -148,8 +277,9 @@ function Header() {
             </Button>
 
             <Button
+              ref={(el) => el && buttonRefs.current.push(el)}
               variant="default"
-              className={`w-9 h-9 md:w-auto md:h-10 rounded-full cursor-pointer ${
+              className={`navbar-button opacity-0 create-trip w-9 h-9 md:w-auto md:h-10 rounded-full cursor-pointer bg-transparent border-2 border-[#27f09b] text-[#27f09b] hover:bg-[#27f09b] hover:text-black transition-colors duration-300 ease-in-out ${
                 location.pathname.includes("create-trip")
                   ? "bg-[#27f09b] text-black hover:bg-[#27f09b]"
                   : ""
@@ -163,8 +293,9 @@ function Header() {
             </Button>
 
             <Button
+              ref={(el) => el && buttonRefs.current.push(el)}
               variant="default"
-              className={`w-9 h-9 md:w-auto md:h-10 rounded-full cursor-pointer ${
+              className={`navbar-button opacity-0 my-trips w-9 h-9 md:w-auto md:h-10 rounded-full cursor-pointer bg-transparent border-2 border-[#27f09b] text-[#27f09b] hover:bg-[#27f09b] hover:text-black transition-colors duration-300 ease-in-out ${
                 location.pathname.includes("my-trips")
                   ? "bg-[#27f09b] text-black hover:bg-[#27f09b]"
                   : ""
@@ -179,14 +310,15 @@ function Header() {
             <Popover open={openPopover} onOpenChange={setOpenPopover}>
               <PopoverTrigger>
                 <img
+                  ref={profilePicRef}
                   src={profilePic}
-                  className="h-[35px] w-[35px] rounded-full cursor-pointer"
+                  className="profilePic h-[35px] w-[35px] rounded-full cursor-pointer"
                   alt="User"
                   onClick={() => setOpenPopover(true)}
                 />
               </PopoverTrigger>
               <PopoverContent className="p-2 flex flex-col w-[100%] ">
-                <div className="hover:bg-gray-100 p-2 rounded-md">
+                <div className="hover:bg-[#27f09b] hover:text-black transition-colors duration-300 ease-in-out p-2 rounded-md">
                   <h2
                     className="cursor-pointer font-bold"
                     onClick={() => {
@@ -197,7 +329,7 @@ function Header() {
                     <i className="ri-user-3-fill"></i> My Profile
                   </h2>
                 </div>
-                <div className="hover:bg-gray-100 p-2 rounded-md">
+                <div className="hover:bg-[#27f09b] hover:text-black transition-colors duration-300 ease-in-out p-2 rounded-md">
                   <h2
                     className="cursor-pointer font-bold"
                     onClick={() => {
@@ -213,8 +345,9 @@ function Header() {
           </div>
         ) : (
           <Button
+            ref={signInRef}
             onClick={() => setOpenDialog(true)}
-            className="bg-black text-white hover:cursor-pointer"
+            className="sign-in border-2 border-[#27f09b] bg-transparent text-[#27f09b] hover:text-black hover:bg-[#27f09b] transition-colors duration-300 ease-in-out hover:cursor-pointer"
           >
             Sign In
           </Button>
@@ -223,8 +356,8 @@ function Header() {
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent openDialog={openDialog} setOpenDialog={setOpenDialog}>
           <DialogHeader>
-            <DialogDescription>
-              <img src="/logo.svg" alt="Logo" />
+            <DialogDescription className="flex flex-col items-center justify-center">
+              <img src="/logoImage3.svg" alt="Logo" className="w-[5rem] h-[5rem]"/>
               <h2 className="font-bold text-lg mt-4">Sign In With Google</h2>
               <p>Sign in securely with Google authentication</p>
               <Button
