@@ -12,8 +12,21 @@ import gsap from "gsap";
 function App() {
   useEffect(() => {
     const cursor = document.querySelector("#cursor");
-
+    if (!cursor) return;
+  
+    // Initially hide cursor
+    cursor.style.opacity = "0";
+  
     const moveCursor = (dets) => {
+      // Show cursor on first movement
+      if (cursor.style.opacity === "0") {
+        gsap.to(cursor, {
+          opacity: 1,
+          duration: 0.3,
+          ease: "power1.out",
+        });
+      }
+  
       gsap.to(cursor, {
         x: dets.x,
         y: dets.y,
@@ -21,18 +34,19 @@ function App() {
         ease: "back.out",
       });
     };
-
-    if (cursor) {
+  
+    // Attach the event after a small delay to ensure DOM paint
+    const timeout = setTimeout(() => {
       window.addEventListener("mousemove", moveCursor);
-    }
-
-    // Cleanup on unmount
+    }, 100); // 100ms delay is enough
+  
+    // Cleanup
     return () => {
-      if (cursor) {
-        window.removeEventListener("mousemove", moveCursor);
-      }
+      clearTimeout(timeout);
+      window.removeEventListener("mousemove", moveCursor);
     };
   }, []);
+  
 
   return (
     <>

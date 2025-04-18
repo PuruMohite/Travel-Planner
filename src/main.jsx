@@ -20,15 +20,22 @@ const router = createBrowserRouter([
     path: "/",
     element: <App />,
     children: [
-      { path: "/", element: <Hero /> },
+      {
+        path: "/",
+        element: (
+          <>
+            <ScrollToTop />
+            <Hero />
+          </>
+        ),
+      },
       {
         path: "create-trip",
         element: (
-            <>
+          <>
             <ScrollToTop />
             <CreateTrip />
-            </>
-            
+          </>
         ),
       },
       {
