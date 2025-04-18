@@ -48,19 +48,19 @@ function InfoSection({ trip }) {
           <h2 className="font-bold text-2xl">
             {trip?.userSelection?.location?.description}
           </h2>
-          <div className="flex gap-5">
-            <h2 className="p-1 px-3 bg-gray-200 rounded-full text-gray-500">
+          <div className="flex gap-2 md:gap-5">
+            <h2 className="py-1 rounded-md text-center md:p-1 md:px-3 bg-gray-200 md:rounded-full text-gray-500  md:text-left">
               📅 {trip?.userSelection?.noOfDays} Day
             </h2>
-            <h2 className="p-1 px-3 bg-gray-200 rounded-full text-gray-500">
+            <h2 className="py-1 rounded-md text-center md:p-1 md:px-3 bg-gray-200 md:rounded-full text-gray-500 md:text-left">
               💲 {trip?.userSelection?.budget} Budget
             </h2>
-            <h2 className="p-1 px-3 bg-gray-200 rounded-full text-gray-500">
+            <h2 className="py-1 rounded-md text-center md:p-1 md:px-3 bg-gray-200 md:rounded-full text-gray-500 md:text-left">
               🥂 No. of Travelers: {trip?.userSelection?.traveler}
             </h2>
           </div>
         </div>
-        <Button>
+        <Button className="hidden md:block">
           <IoIosSend />
         </Button>
       </div>
