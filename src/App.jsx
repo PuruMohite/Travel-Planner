@@ -28,8 +28,8 @@ function App() {
       }
   
       gsap.to(cursor, {
-        x: dets.x,
-        y: dets.y,
+        x: dets.x + 5,
+        y: dets.y + 5,
         duration: 1,
         ease: "back.out",
       });
